@@ -1,11 +1,63 @@
 package com.example.stecu.data.repository
 
+import android.graphics.Bitmap
 import com.example.stecu.BuildConfig
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.ai.client.generativeai.type.generationConfig
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import com.google.gson.annotations.SerializedName
+
+data class OcrResult(
+    @SerializedName("title")
+    val title: String = "Unknown Title",
+    @SerializedName("role")
+    val role: String = "Not specified"
+)
 
 class GeminiRepository {
+
+    private val visionModel = GenerativeModel(
+        modelName = "gemini-1.5-flash", // Model ini mendukung input gambar dan teks
+        apiKey = BuildConfig.GEMINI_API_KEY,
+        generationConfig = generationConfig {
+            temperature = 0.2f
+            responseMimeType = "application/json" // Meminta output JSON
+        }
+    )
+
+    suspend fun extractCertificateInfoFromImage(image: Bitmap): Result<OcrResult> {
+        return try {
+            val prompt = """
+                You are an expert OCR model specializing in extracting information from certificates of achievement or participation.
+                Given the following image, extract the title of the event/competition and the role or achievement of the person (e.g., 'Juara 1', 'Peserta', 'Panitia', 'Gold Medal').
+                Return the result as a single, valid JSON object with two keys: "title" and "role".
+                If you cannot find specific information, provide a sensible default like "Sertifikat Partisipasi" for the title or "Peserta" for the role.
+                Do not include any other text, explanations, or markdown syntax.
+            """.trimIndent()
+
+            val inputContent = content {
+                image(image)
+                text(prompt)
+            }
+
+            val response = visionModel.generateContent(inputContent)
+
+            response.text?.let { jsonString ->
+                // Parsing JSON dengan aman
+                val ocrResult = try {
+                    Gson().fromJson(jsonString, OcrResult::class.java)
+                } catch (e: JsonSyntaxException) {
+                    // Jika JSON tidak valid, kembalikan default
+                    OcrResult("Gagal Parsing Judul", "Gagal Parsing Peran")
+                }
+                Result.success(ocrResult)
+            } ?: Result.failure(Exception("Empty response from Vision API."))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     // Model untuk respons sekali jalan (seperti di AssistantScreen)
     private val generativeModel = GenerativeModel(

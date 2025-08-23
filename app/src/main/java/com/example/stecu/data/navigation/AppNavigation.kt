@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +19,7 @@ import com.example.stecu.ui.screen.AmberPointsScreen
 import com.example.stecu.ui.screen.CareerDetailScreen
 import com.example.stecu.ui.screen.CareerReportScreen
 import com.example.stecu.ui.screen.ChatScreen
+import com.example.stecu.ui.screen.ProfileScreen
 import com.example.stecu.viewmodel.AssistantUiState
 import com.example.stecu.viewmodel.ChatViewModel
 
@@ -28,6 +30,11 @@ sealed class Screen(val route: String) {
     data object AmberPoints : Screen("amber_points")
     object CareerDetail : Screen("career_detail/{careerId}") {
         fun createRoute(careerId: String) = "career_detail/$careerId"
+    }
+    object CertificateDetail : Screen("certificate_detail/{certificateId}") {
+        // Fungsi helper untuk membuat rute dengan ID yang spesifik
+        // Ini akan menghasilkan string seperti "certificate_detail/5"
+        fun createRoute(certificateId: Int) = "certificate_detail/$certificateId"
     }
     object Chat : Screen("chat?conversationId={conversationId}") {
         val arguments = listOf(
@@ -105,6 +112,27 @@ fun AppNavigation(
             AmberPointsScreen(navController = navController)
         }
 
+//        composable(
+//            route = Screen.CertificateDetail.route,
+//            // Definisikan bahwa {certificateId} adalah sebuah argumen bertipe Integer
+//            arguments = listOf(navArgument("certificateId") { type = NavType.IntType })
+//        ) { backStackEntry ->
+//            // Ambil argumen dari backStackEntry
+//            val certificateId = backStackEntry.arguments?.getInt("certificateId")
+//
+//            // Penanganan error jika karena suatu hal ID-nya tidak ada (null)
+//            if (certificateId != null) {
+//                CertificateDetailScreen(
+//                    onDismissRequest = { navController.popBackStack() },
+//                    navController = navController,
+//                    certificateId = certificateId
+//                )
+//            } else {
+//                // Jika ID null, jangan biarkan crash. Cukup kembali ke layar sebelumnya.
+//                navController.popBackStack()
+//            }
+//        }
+
         composable(
             route = Screen.CareerDetail.route,
             arguments = listOf(navArgument("careerId") { type = NavType.StringType })
@@ -115,6 +143,8 @@ fun AppNavigation(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-        composable(Screen.Profile.route) { /* Screen untuk Akun Pengguna */ }
+        composable(Screen.Profile.route) {
+            ProfileScreen(navController = navController)
+        }
     }
 }

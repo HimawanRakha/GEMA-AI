@@ -56,7 +56,7 @@ fun CustomDrawerItem(
             fontSize = 18.sp,
             overflow = TextOverflow.Ellipsis,
             color = textColor,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+            fontWeight = if (selected) FontWeight.Normal else FontWeight.Light,
             modifier = Modifier
                 .weight(1f)          // ⬅️ Batasi lebar teks agar tidak menutupi ikon
                 .padding(end = 8.dp)  // jarak kecil ke ikon

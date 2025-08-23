@@ -10,12 +10,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
@@ -28,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import com.example.stecu.data.navigation.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -219,10 +222,30 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
                             Spacer(modifier = Modifier.weight(1f))
                             // Footer Item
                             NavigationDrawerItem(
-                                label = { Text("himawanrakha") },
+                                label = { Text("Mia Gilbert") },
                                 selected = false,
-                                onClick = { /* navController.navigate(...) */ scope.launch { drawerState.close() } },
-                                icon = { Icon(Icons.Default.Person, contentDescription = "Akun Pengguna") },
+                                onClick = {
+                                    navController.navigate(Screen.Profile.route)
+                                    scope.launch { drawerState.close() } },
+                                icon = {
+                                    // Kita gunakan Box sebagai container untuk avatar
+                                    Box(
+                                        modifier = Modifier
+                                            .size(40.dp) // Tentukan ukuran avatar
+                                            .clip(CircleShape) // Membuat Box menjadi lingkaran
+                                            // Beri warna latar belakang sebagai fallback jika gambar gagal dimuat
+                                            .background(Color.LightGray)
+                                    ) {
+                                        // Di sinilah Anda akan menempatkan gambar Anda
+                                        Image(
+                                            painter = painterResource(id = R.drawable.bg_person), // Ganti dengan gambar Anda
+                                            contentDescription = "Foto Profil Mia Gilbert",
+                                            // ContentScale.Crop memastikan gambar mengisi lingkaran tanpa distorsi
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier.fillMaxSize()
+                                        )
+                                    }
+                                },
                                 modifier = Modifier.padding(bottom = 16.dp),
                                 colors = NavigationDrawerItemDefaults.colors(unselectedTextColor = Color.Black, unselectedIconColor = Color.Black, unselectedContainerColor = Color.Transparent)
                             )

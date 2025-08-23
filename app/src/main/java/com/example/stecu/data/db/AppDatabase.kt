@@ -28,14 +28,15 @@ class Converters {
 
 
 @Database(
-    entities = [ConversationEntity::class, ChatMessageEntity::class, CareerPlanEntity::class],
-    version = 3
+    entities = [ConversationEntity::class, ChatMessageEntity::class, CareerPlanEntity::class,  CertificateEntity::class],
+    version = 4
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun chatDao(): ChatDao
     abstract fun careerPlanDao(): CareerPlanDao
+    abstract fun certificateDao(): CertificateDao
 
     companion object {
         @Volatile
