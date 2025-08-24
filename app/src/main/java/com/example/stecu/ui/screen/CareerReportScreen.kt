@@ -116,7 +116,8 @@ fun CareerReportScreen(
                         onItemLongClick = {
                             itemToDelete = item
                             showDeleteDialog = true
-                        }
+                        },
+                        progress = item.progress,
                     )
                 }
             }
@@ -158,13 +159,56 @@ fun CareerReportScreen(
     }
 }
 
+@Composable
+fun ProgressCircle(
+    progress: Float, // Nilai dari 0.0f (0%) sampai 1.0f (100%)
+    modifier: Modifier = Modifier
+) {
+    // Menggunakan Box yang Anda berikan sebagai dasar/bingkai
+    Box(
+        modifier = modifier
+            .size(80.dp)
+            .shadow(
+                elevation = 8.dp,
+                shape = RoundedCornerShape(20.dp),
+                clip = true
+            )
+            .border(
+                width = 1.dp,
+                color = Color(0X9B9B9B80),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .clip(RoundedCornerShape(20))
+            .background(Color.White),
+        contentAlignment = Alignment.Center // Ini kunci untuk menengahkan isinya
+    ) {
+        // 1. Progress Bar Melingkar di dalam Box
+        CircularProgressIndicator(
+            progress = { progress }, // Menggunakan nilai progress yang diberikan
+            modifier = Modifier.size(60.dp), // Ukuran sedikit lebih kecil dari Box
+            color = Color(0xFFFF6000), // Warna oranye untuk progress yang sudah selesai
+            trackColor = Color.LightGray.copy(alpha = 0.5f), // Warna abu-abu untuk sisa progress
+            strokeWidth = 6.dp // Ketebalan garis progress
+        )
+        // 2. Teks Persentase di tengah
+        Text(
+            text = "${(progress * 100).toInt()}%",
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp
+        )
+    }
+}
+
 
 @OptIn(ExperimentalFoundationApi::class) // CHANGE 6: Add OptIn for combinedClickable
 @Composable
 fun CareerReportItem(
     title: String,
     onItemClick: () -> Unit,
-    onItemLongClick: () -> Unit // CHANGE 7: Add a new parameter for long click
+    onItemLongClick: () -> Unit,
+    progress: Float,
+//    item: CareerPlanEntity// CHANGE 7: Add a new parameter for long click
 ) {
     val gradientBrush = Brush.horizontalGradient(
         colors = listOf(Color(0xFFFF6000), Color(0xFFFC8F33))
@@ -191,7 +235,7 @@ fun CareerReportItem(
             .clip(RoundedCornerShape(16.dp))
             .background(Color.White),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-    ){
+    ) {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -211,10 +255,25 @@ fun CareerReportItem(
                         shape = RoundedCornerShape(20.dp)
                     )
                     .clip(RoundedCornerShape(20))
-                    .background(Color.White)
+                    .background(Color.White),
+                contentAlignment = Alignment.Center
             ) {
-                // Anda bisa menambahkan icon di dalam Box ini jika perlu
+                CircularProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier.size(60.dp),
+                    color = Color(0xFFFF6000), // Warna progress
+                    trackColor = Color.LightGray.copy(alpha = 0.5f), // Warna sisa
+                    strokeWidth = 6.dp
+                )
+                // Teks persentase di tengah
+                Text(
+                    text = "${(progress * 100).toInt()}%",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
             }
+
             Spacer(modifier = Modifier.width(16.dp))
             Column(
                 modifier = Modifier
@@ -234,27 +293,31 @@ fun CareerReportItem(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .border(
-                        width = 1.dp,
-                        color = Color(0X9B9B9B80),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                    .clip(RoundedCornerShape(12))
-                    .background(Color.White)
-                    .padding(4.dp),
-                    contentAlignment = Alignment.Center, ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(
+                            width = 1.dp,
+                            color = Color(0X9B9B9B80),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .clip(RoundedCornerShape(12))
+                        .background(Color.White)
+                        .padding(4.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
                     Text(
                         text = "See Career Tree",
                         color = Color.Black,
                         fontSize = 14.sp
                     )
                 }
+
             }
         }
+        }
     }
-}
+
 
 // CustomSearchBar remains the same, no changes needed here.
 @Composable

@@ -30,7 +30,14 @@ data class QuestFromJson(
 data class CareerPlan(
     val goal: String,
     val milestones: List<Milestone>
-)
+) {
+    fun calculateProgress(): Float {
+        val allSteps = milestones.flatMap { it.quests }.flatMap { it.steps }
+        if (allSteps.isEmpty()) return 0f
+        val checkedSteps = allSteps.count { it.isChecked }
+        return checkedSteps.toFloat() / allSteps.size.toFloat()
+    }
+}
 
 data class Milestone(
     val id: String,
@@ -49,7 +56,7 @@ data class Quest(
 // Ini adalah data class yang sudah ada di CareerDetailScreen.kt, kita pindahkan ke sini
 data class CheckableStep(
     val text: String,
-    val isChecked: MutableState<Boolean> = mutableStateOf(false)
+    var isChecked: Boolean = false
 )
 
 // Resource bisa digunakan oleh keduanya

@@ -90,15 +90,16 @@ class GeminiRepository {
         },
         systemInstruction = content(role = "model") {
             text("""
-                BUAT DALAM BAHASA INDONESIA
-                Anda adalah AI Career Plan Generator. Tugas Anda adalah membuat rencana karir dalam format JSON yang valid berdasarkan input pengguna.
-                - JSON harus berisi keys: "goal", dan "milestones".
-                - Setiap milestone harus memiliki "id", "title", "duration_weeks", dan "quests".
-                - Setiap quest harus memiliki "id", "title", "steps" (minimal 3), dan "resources".
-                - Key "resources" HARUS berupa array of objects, di mana setiap object memiliki key "title" (string) dan "url" (string) pastikan url ada dan nyata.
-                - JANGAN tambahkan teks, penjelasan, atau markdown apa pun di luar objek JSON.
-                - Output HANYA JSON.
-            """.trimIndent())
+            BUAT DALAM BAHASA INDONESIA
+            Anda adalah AI Career Plan Generator. Tugas Anda adalah membuat rencana karir dalam format JSON yang valid berdasarkan input pengguna.
+            - JSON harus berisi keys: "goal", dan "milestones".
+            - Setiap milestone harus memiliki "id", "title", "duration_weeks", dan "quests".
+            - Setiap quest harus memiliki "id", "title", "steps", dan "resources".
+            - Key "steps" HARUS berupa array of objects. Setiap object step HARUS memiliki key "text" (string) dan "isChecked" (boolean, dengan nilai awal selalu false).
+            - Key "resources" HARUS berupa array of objects, di mana setiap object memiliki key "title" (string) dan "url" (string) pastikan url ada dan nyata.
+            - JANGAN tambahkan teks, penjelasan, atau markdown apa pun di luar objek JSON.
+            - Output HANYA JSON.
+        """.trimIndent())
         }
     )
 
