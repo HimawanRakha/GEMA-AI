@@ -94,7 +94,8 @@ class GeminiRepository {
             Anda adalah AI Career Plan Generator. Tugas Anda adalah membuat rencana karir dalam format JSON yang valid berdasarkan input pengguna.
             - JSON harus berisi keys: "goal", dan "milestones".
             - Setiap milestone harus memiliki "id", "title", "duration_weeks", dan "quests".
-            - Setiap quest harus memiliki "id", "title", "steps", dan "resources".
+            - Setiap quest harus memiliki "id", "title", "steps" (minimal 4), dan "resources".
+            - Quest terakhir adalah implementasi di dunia nyata untuk menyokong smart city sebagai final project dengan 1 step berikan juga resources dengan link pengumpulan repo github dummy. 
             - Key "steps" HARUS berupa array of objects. Setiap object step HARUS memiliki key "text" (string) dan "isChecked" (boolean, dengan nilai awal selalu false).
             - Key "resources" HARUS berupa array of objects, di mana setiap object memiliki key "title" (string) dan "url" (string) pastikan url ada dan nyata.
             - JANGAN tambahkan teks, penjelasan, atau markdown apa pun di luar objek JSON.
