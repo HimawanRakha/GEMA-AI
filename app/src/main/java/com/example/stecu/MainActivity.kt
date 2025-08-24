@@ -222,7 +222,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
                             Spacer(modifier = Modifier.weight(1f))
                             // Footer Item
                             NavigationDrawerItem(
-                                label = { Text("Mia Gilbert") },
+                                label = { Text("Dzaky Ryrdi") },
                                 selected = false,
                                 onClick = {
                                     navController.navigate(Screen.Profile.route)
